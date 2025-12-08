@@ -1,6 +1,8 @@
 package com.dbteam7.backend.user.service;
 
 import com.dbteam7.backend.entity.User;
+import com.dbteam7.backend.user.dto.LoginRequest;
+import com.dbteam7.backend.user.dto.LoginResponse;
 import com.dbteam7.backend.user.dto.SignupRequest;
 import com.dbteam7.backend.user.dto.SignupResponse;
 import com.dbteam7.backend.user.repository.UserRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -34,8 +37,6 @@ public class UserService {
         user.setMail(request.getMail());
         user.setPenalty(0); // 기본 패널티 0
 
-        // 저장
-        // 주의: 회원가입 시에는 그룹에 속하지 않으므로 권한이 없음
         // 그룹 가입 시 UserGroup 테이블에 레코드가 생성되며, 그때 group_role_id가 할당됨
         User savedUser = userRepository.save(user);
 
@@ -45,6 +46,29 @@ public class UserService {
         response.setUserName(savedUser.getUserName());
         response.setMail(savedUser.getMail());
         response.setMessage("회원가입이 완료되었습니다.");
+
+        return response;
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        // 이름과 이메일로 사용자 조회
+        Optional<User> userOptional = userRepository.findByUserNameAndMail(
+                request.getUserName(), 
+                request.getMail()
+        );
+
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("이름 또는 이메일이 일치하지 않습니다.");
+        }
+
+        User user = userOptional.get();
+
+        // 응답 생성
+        LoginResponse response = new LoginResponse();
+        response.setUserId(user.getUserId());
+        response.setUserName(user.getUserName());
+        response.setMail(user.getMail());
+        response.setMessage("로그인에 성공했습니다.");
 
         return response;
     }

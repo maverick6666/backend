@@ -1,5 +1,7 @@
 package com.dbteam7.backend.user.controller;
 
+import com.dbteam7.backend.user.dto.LoginRequest;
+import com.dbteam7.backend.user.dto.LoginResponse;
 import com.dbteam7.backend.user.dto.SignupRequest;
 import com.dbteam7.backend.user.dto.SignupResponse;
 import com.dbteam7.backend.user.service.UserService;
@@ -31,6 +33,20 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ErrorResponse("회원가입 중 오류가 발생했습니다."));
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        try {
+            LoginResponse response = userService.login(request);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("로그인 중 오류가 발생했습니다."));
         }
     }
 
