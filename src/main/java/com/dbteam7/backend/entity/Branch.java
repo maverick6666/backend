@@ -12,14 +12,16 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "branch")
+@Table(name = "branch", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_branch_name", columnNames = "name")
+})
 public class Branch {
 
     @Id
     @Column(name = "branch_id", length = 45)
     private String branchId; // String ID
 
-    @Column(nullable = false, unique = true, length = 45)
+    @Column(nullable = false, length = 45)
     private String name; // 지점명
 
     @Column(name = "address", length = 45, nullable = false)
@@ -35,10 +37,10 @@ public class Branch {
     private String chargeRate; // 요금 정책
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
-    private List<Group> groups = new ArrayList<>();
+    private final List<Group> groups = new ArrayList<>();
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
-    private List<Facility> facilities = new ArrayList<>();
+    private final List<Facility> facilities = new ArrayList<>();
 
     @Builder
     public Branch(String branchId, String name, String address, String contactNumber, String operatingHours, String chargeRate) {

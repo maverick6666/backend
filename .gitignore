@@ -47,3 +47,8 @@ hs_err_pid*
 project_db.db
 *.db
 
+# Documentation and test files
+API_CHECKLIST.md
+TESTING_GUIDE.md
+backend/http/
+

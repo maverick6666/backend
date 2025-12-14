@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "group")
+@Table(name = "groups")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,12 +32,12 @@ public class Group {
     private User leader;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<UserGroup> userGroups = new ArrayList<>();
+    private final List<UserGroup> userGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<GroupRole> groupRoles = new ArrayList<>();
+    private final List<GroupRole> groupRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Event> events = new ArrayList<>();
+    private final List<Event> events = new ArrayList<>();
 }
 
